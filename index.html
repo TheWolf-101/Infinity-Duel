@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Blade Duel</title>
+<style>
+  :root{--bg:#08120f;--panel:#12221d;--accent:#58d68d;--danger:#ff5d5d;--gold:#ffd166;--text:#ecfff5;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  body{margin:0;background:radial-gradient(circle at top,#17392f,#050807 70%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;height:100vh;height:100dvh}
+  #game{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden}
+  .top{position:absolute;top:env(safe-area-inset-top,12px);left:14px;right:14px;z-index:5}
+  .row{display:flex;gap:8px;align-items:center}.barwrap{flex:1}.name{font-size:12px;opacity:.86;margin:3px 2px}.bar{height:15px;background:#26332e;border:1px solid #49675d;border-radius:999px;overflow:hidden}.fill{height:100%;width:100%;background:linear-gradient(90deg,#2ee66e,#b5ff78);transition:width .18s}.enemy .fill{background:linear-gradient(90deg,#ff4343,#ffb25f)}
+  .stats{display:flex;justify-content:space-between;font-size:12px;margin-top:5px;opacity:.88}.arena{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:800px}.floor{position:absolute;bottom:-18vh;width:150vw;height:45vh;background:radial-gradient(ellipse at center,#24483e 0%,#0b1512 65%);transform:rotateX(64deg);border-top:1px solid #426b5e}.moon{position:absolute;top:9vh;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,#d6fff0,#5ca487 65%,transparent 67%);opacity:.35;filter:blur(.2px)}
+  .fighter{position:absolute;bottom:24vh;width:95px;height:185px;transition:transform .14s}.fighter:before{content:"";position:absolute;left:28px;top:5px;width:40px;height:40px;border-radius:50%;background:#d9c0a2}.body{position:absolute;left:21px;top:45px;width:54px;height:80px;border-radius:18px 18px 12px 12px;background:linear-gradient(#3b4650,#172026);border:2px solid #8fb7aa}.legs{position:absolute;left:25px;top:122px;width:46px;height:62px;background:linear-gradient(90deg,#101719 45%,transparent 45% 55%,#101719 55%);border-radius:0 0 15px 15px}.sword{position:absolute;width:10px;height:125px;left:78px;top:28px;background:linear-gradient(#e9fff6,#6fffb5 45%,#1e7252);border-radius:8px;transform-origin:5px 100%;transform:rotate(28deg);box-shadow:0 0 15px #58d68d}.shield{position:absolute;left:-12px;top:68px;width:37px;height:55px;border-radius:22px;background:linear-gradient(#41504b,#111);border:2px solid #cadbd3}.enemyF{right:calc(50% - 125px);filter:hue-rotate(110deg) saturate(1.4)}.playerF{left:calc(50% - 125px);transform:scaleX(-1)}
+  .slash{position:absolute;left:50%;top:42%;width:150px;height:150px;border-top:8px solid white;border-radius:50%;opacity:0;transform:translate(-50%,-50%) rotate(-30deg);filter:drop-shadow(0 0 10px var(--accent));z-index:3}.flash{animation:slash .28s ease}@keyframes slash{0%{opacity:0;transform:translate(-50%,-50%) rotate(-70deg) scale(.6)}50%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) rotate(20deg) scale(1.25)}}
+  .msg{position:absolute;top:25%;left:18px;right:18px;text-align:center;font-weight:800;font-size:24px;text-shadow:0 2px 12px #000;z-index:6;min-height:34px}.warn{color:var(--gold);animation:pulse .7s infinite alternate}@keyframes pulse{to{transform:scale(1.05)}}
+  .controls{position:absolute;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;z-index:7}.btn{border:0;border-radius:18px;padding:17px 8px;background:linear-gradient(#284137,#13211d);color:var(--text);font-weight:850;font-size:16px;box-shadow:0 8px 0 #07100d,0 0 0 1px #3f6657 inset}.btn:active{transform:translateY(5px);box-shadow:0 3px 0 #07100d}.attack{background:linear-gradient(#2ecc71,#167844)}.block{background:linear-gradient(#5b6970,#27333a)}.dodge{background:linear-gradient(#315b8a,#172f51)}
+  .screen{position:absolute;inset:0;z-index:10;background:linear-gradient(#07110eeb,#050807f5);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}.card{max-width:430px;background:#101d19;border:1px solid #37594e;border-radius:26px;padding:24px;box-shadow:0 20px 70px #000}.card h1{margin:0 0 8px;font-size:38px}.card p{line-height:1.45;opacity:.9}.start{width:100%;margin-top:12px}.hide{display:none}.loot{position:absolute;left:50%;bottom:17vh;transform:translateX(-50%);z-index:9;background:#101d19;border:1px solid #5c8b79;border-radius:20px;padding:14px;text-align:center;box-shadow:0 14px 40px #000}.loot button{margin:4px;border:0;border-radius:12px;padding:10px 12px;font-weight:800;background:#ffd166;color:#111}.hint{position:absolute;left:14px;right:14px;bottom:128px;text-align:center;font-size:13px;opacity:.8}.float{position:absolute;left:50%;top:48%;font-weight:900;font-size:26px;pointer-events:none;animation:float 700ms ease forwards;text-shadow:0 2px 7px #000}@keyframes float{to{transform:translateY(-58px);opacity:0}}
+</style>
+</head>
+<body>
+<div id="game">
+  <div class="top">
+    <div class="row"><div class="barwrap"><div class="name">You</div><div class="bar"><div id="php" class="fill"></div></div></div><div class="barwrap enemy"><div id="ename" class="name">Enemy</div><div class="bar"><div id="ehp" class="fill"></div></div></div></div>
+    <div class="stats"><span id="level">Duel 1</span><span id="gold">Gold 0</span><span id="power">Blade +0</span></div>
+  </div>
+  <div class="arena"><div class="moon"></div><div class="floor"></div><div class="fighter playerF"><div class="body"></div><div class="legs"></div><div class="sword"></div><div class="shield"></div></div><div id="enemyModel" class="fighter enemyF"><div class="body"></div><div class="legs"></div><div class="sword"></div><div class="shield"></div></div><div id="slash" class="slash"></div></div>
+  <div id="msg" class="msg"></div><div id="hint" class="hint">Watch for ⚠️, then Block/Parry or Dodge. Attack when they recover.</div>
+  <div class="controls"><button class="btn dodge" onclick="act('dodge')">DODGE</button><button class="btn attack" onclick="act('attack')">ATTACK</button><button class="btn block" onclick="act('block')">BLOCK / PARRY</button></div>
+  <div id="loot" class="loot hide"></div>
+  <div id="start" class="screen"><div class="card"><h1>Blade Duel</h1><p>A tiny Infinity Blade-inspired phone game. Time blocks for parries, dodge heavy blows, and upgrade after each win.</p><button class="btn attack start" onclick="begin()">Start Duel</button></div></div>
+</div>
+<script>
+let p,e,duel=1,gold=0,power=0,busy=false,phase='idle',combo=0,enemyTimer=null;
+const $=id=>document.getElementById(id);
+function resetEnemy(){let boss=duel%4===0;e={max:80+duel*25+(boss?80:0),hp:80+duel*25+(boss?80:0),dmg:10+duel*3+(boss?5:0),name:boss?'Boss Warden':'Duelist'};$('ename').textContent=e.name;}
+function begin(){p={max:120+power*8,hp:120+power*8,dmg:16+power*6};resetEnemy();$('start').classList.add('hide');$('loot').classList.add('hide');busy=false;phase='idle';combo=0;draw();say('Duel '+duel,900);setTimeout(enemyThink,900)}
+function draw(){ $('php').style.width=Math.max(0,p.hp/p.max*100)+'%'; $('ehp').style.width=Math.max(0,e.hp/e.max*100)+'%'; $('level').textContent='Duel '+duel; $('gold').textContent='Gold '+gold; $('power').textContent='Blade +'+power; }
+function say(t,ms=600,cls=''){let m=$('msg');m.textContent=t;m.className='msg '+cls;clearTimeout(m.t);m.t=setTimeout(()=>{m.textContent='';m.className='msg'},ms)}
+function pop(t,x=50){let d=document.createElement('div');d.className='float';d.style.left=x+'%';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),750)}
+function slash(){let s=$('slash');s.classList.remove('flash');void s.offsetWidth;s.classList.add('flash')}
+function act(a){ if(p.hp<=0||e.hp<=0||busy&&a==='attack')return; if(a==='attack'){ if(phase==='recover'||phase==='idle'){busy=true;slash();let dmg=p.dmg+combo*3+Math.floor(Math.random()*8);e.hp-=dmg;combo++;pop('-'+dmg,62);say(combo>2?'Combo x'+combo:'Hit!');draw();setTimeout(()=>busy=false,360); if(e.hp<=0)return win();} else {say('Too early!');combo=0;}} if(a==='block'){ if(phase==='incoming'){phase='parried';combo++;say('PARRY!',650);pop('PARRY',48);setTimeout(()=>{phase='recover';say('Counter!',650)},150);} else {say('Guard up'); p.hp=Math.min(p.max,p.hp+1); draw();}} if(a==='dodge'){ if(phase==='incoming'||phase==='heavy'){phase='dodged';combo=0;say('Dodged!',550);setTimeout(()=>{phase='recover';say('Opening!',650)},170);} else say('Roll');}}
+function enemyThink(){ if(p.hp<=0||e.hp<=0)return; if(phase!=='idle'&&phase!=='recover'){enemyTimer=setTimeout(enemyThink,400);return} phase=Math.random()<.28?'heavy':'incoming'; let heavy=phase==='heavy'; say(heavy?'⚠️ HEAVY SWING':'⚠️ Incoming attack',heavy?1000:780,'warn'); $('enemyModel').style.transform='translateX(-28px)'; setTimeout(()=>{ $('enemyModel').style.transform=''; if(phase==='parried'||phase==='dodged'){phase='recover';setTimeout(()=>{phase='idle';enemyThink()},850);return} let dmg=heavy?e.dmg+12:e.dmg; p.hp-=dmg; combo=0; pop('-'+dmg,38); say(heavy?'Crushed!':'Hit taken'); draw(); if(p.hp<=0)return lose(); phase='idle'; enemyTimer=setTimeout(enemyThink,700+Math.random()*600); },heavy?1000:780)}
+function win(){clearTimeout(enemyTimer);gold+=25+duel*10;say('Victory!',900);draw();let l=$('loot');l.classList.remove('hide');l.innerHTML=`<b>Victory Reward</b><br>Gold earned. Choose an upgrade:<br><button onclick="upgrade('blade')">Blade +1 / 40g</button><button onclick="upgrade('health')">Max HP +25 / 35g</button><button onclick="next()">Next Duel</button>`}
+function upgrade(type){let cost=type==='blade'?40:35;if(gold<cost){say('Need more gold');return}gold-=cost;if(type==='blade')power++;else p.max+=25,p.hp+=25;draw();say('Upgraded!')}
+function next(){duel++;begin()}
+function lose(){clearTimeout(enemyTimer);say('Defeated',1200);$('start').classList.remove('hide');$('start').innerHTML='<div class="card"><h1>You Fell</h1><p>Your blade upgrades stay. Try the duel again.</p><button class="btn attack start" onclick="begin()">Retry</button></div>'}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')act('dodge');if(e.key===' ')act('attack');if(e.key==='ArrowRight')act('block')});
+</script>
+</body>
+</html>
